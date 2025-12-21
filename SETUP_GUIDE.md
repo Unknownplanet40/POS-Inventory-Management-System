@@ -30,13 +30,14 @@ local-stock-keeper/
 - Node.js (v16 or higher)
 - npm or yarn
 - Postman (optional, for testing API)
+- Browser (Chrome, Firefox, etc.)
 
 ## Installation & Setup
 
 ### Step 1: Install Frontend Dependencies
 
 ```bash
-cd local-stock-keeper
+cd POS-Inventory-Management-System
 npm install
 ```
 
@@ -132,7 +133,7 @@ A Postman collection is included in `server/POS_System_API.postman_collection.js
 - Sales history and reports
 - User management (admin only)
 - Store settings configuration
-- **Advanced Receipt Printing** (see Receipt Printing section below)
+- Receipt Printing
 - Data export/import capabilities
 
 ### Backend (NestJS)
@@ -144,80 +145,7 @@ A Postman collection is included in `server/POS_System_API.postman_collection.js
 - SQLite persistent database
 - CORS enabled for frontend communication
 
-## Receipt Printing
-
-### Overview
-The POS system includes advanced receipt printing with logo support, customizable information, and reliable image handling.
-
-### Setting Up Store Logo
-
-1. Go to **Settings** → **Store Settings**
-2. Click on **Store Logo** field
-3. Upload your logo image from `server/product image/` folder
-4. The logo will automatically appear in printed receipts
-
-### Receipt Customization
-
-Configure receipt appearance in **Store Settings**:
-- **Store Name**: Business name (appears at top of receipt)
-- **Store Phone**: Contact phone number
-- **Store Email**: Contact email address
-- **Store Address**: Business address
-- **Store Logo**: Business logo/image
-- **Paper Size**: Choose between 58mm (thermal printer) or 80mm (standard printer)
-
-### How Receipt Printing Works
-
-1. **User clicks "Print Receipt"** in the POS checkout
-2. **Loading state** appears while logo is processed
-3. **Logo conversion**: Image is converted to base64 format for embedding
-4. **Print preview** opens with fully formatted receipt
-5. **Automatic render delay** (500ms) ensures all content loads before printing
-
-### Technical Implementation
-
-#### Image Processing (`src/lib/utils.ts`)
-- **Function**: `imageToBase64(url?: string)`
-- Converts image URLs to base64 data URLs for embedding
-- 10-second timeout protection for slow connections
-- Automatic fallback to original URL if conversion fails
-- Handles already-converted data URLs
-
-#### Receipt Dialog Component (`src/components/pos/ReceiptDialog.tsx`)
-- Async image conversion with loading state
-- Fallback URL support for reliability
-- 500ms render delay before printing
-- Error handling with console logging
-
-#### Receipt Template (`src/lib/printReceipt.ts`)
-- Responsive design for different paper sizes
-- Optimized logo styling with `object-fit: contain`
-- Support for custom store information
-- Tax calculation display
-- Discount tracking
-
-### Receipt Output
-
-Printed receipts include:
-- Store name and logo
-- Receipt date and time
-- Cashier name
-- Itemized product list with quantities and prices
-- Subtotal, tax, and discount information
-- Final total amount
-- Receipt ID for tracking
-- Store contact information
-
-### Troubleshooting Receipt Printing
-
-| Issue | Solution |
-|-------|----------|
-| Logo not showing | Wait for loading state, ensure image is in `server/product image/` |
-| Logo only shows 2nd time | System now delays print to allow rendering |
-| Receipt preview is blank | Check backend is running at `http://localhost:3000` |
-| Image conversion timeout | Reduce image file size or check internet connection |
-
-
+## Database Schema
 
 SQLite database is stored at: `server/pos-database.sqlite`
 

@@ -1,5 +1,7 @@
 # Quick Reference - POS System for Computer Parts & Accessories
 
+First and foremost, If you haven't already, please follow the full setup instructions in [SETUP_GUIDE.md](SETUP_GUIDE.md) to get the application running.
+
 ### Terminal 1 - Backend
 ```bash
 cd server

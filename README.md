@@ -73,8 +73,9 @@ Auto-created on first backend start. Delete to reset.
 
 ## 📚 Documentation
 
-- **Full Setup**: See `SETUP_GUIDE.md`
-- **API Testing**: See `API_TESTING_GUIDE.md`
+- **Full Setup**: See [SETUP_GUIDE.md](SETUP_GUIDE.md)
+- **API Reference**: See [API_REFERENCE.md](API_REFERENCE.md)
+- **API Testing**: See [API_TESTING.md](API_TESTING.md)
 
 ---
 
@@ -98,3 +99,10 @@ Just import the following JSON data into the system using Import feature
 - JSON Data: [testing-data.json](pos-backup-2025-12-21.json)
 
 Please Note that You may need to finish the initial setup wizard before importing data.
+
+
+---
+
+## Credits
+Developed by [Unknownplanet40](https://github.com/Unknownplanet40)
+- Licensed under [MIT License](LICENSE)

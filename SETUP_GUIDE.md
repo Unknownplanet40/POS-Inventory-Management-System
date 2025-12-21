@@ -86,10 +86,6 @@ The frontend will start on `http://localhost:5173`
 - **Admin**: Can access all features including product management, user management, sales reports
 - **Cashier**: Can only access the checkout page to process sales
 
-## API Documentation
-
-For detailed API documentation and Postman collection, see [server/README.md](server/README.md)
-
 ### Quick API Test
 
 1. **Register a user:**
@@ -315,15 +311,3 @@ The current setup is configured for development. For production:
 - Add rate limiting to API endpoints
 - Implement proper error logging
 - Use a more robust database solution
-
-## Support
-
-For issues or questions:
-1. Check the backend README at `server/README.md`
-2. Review API documentation in the same file
-3. Check browser console for frontend errors
-4. Check backend terminal for server errors
-
-## License
-
-UNLICENSED

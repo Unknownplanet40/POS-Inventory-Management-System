@@ -8,8 +8,11 @@
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
+    "build:vercel": "vite build && cd server && npm install && npm run build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start:server": "cd server && npm run start:prod",
+    "install:all": "npm install && cd server && npm install"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

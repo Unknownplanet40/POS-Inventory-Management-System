@@ -12,18 +12,26 @@ async function bootstrap() {
   app.use(require('express').json({ limit: '10mb' }));
   app.use(require('express').urlencoded({ limit: '10mb', extended: true }));
 
-  // Enable CORS for frontend - allow access from any origin on local network
+  // Enable CORS for frontend
   app.enableCors({
-    origin: true, // Allow all origins (adjust for production)
+    origin: process.env.CORS_ORIGIN || true, // Allow all origins (adjust for production)
     credentials: true,
   });
 
   // Use validation pipes
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
 
-  // Listen on all network interfaces (0.0.0.0) to accept connections from other devices
-  await app.listen(3000, '0.0.0.0');
-  console.log(`Application is running on: http://localhost:3000`);
+  // Listen on all network interfaces
+  const port = process.env.PORT || 3000;
+  const host = process.env.HOST || '0.0.0.0';
+  
+  await app.listen(port, host);
+  console.log(`Application is running on: http://localhost:${port}`);
   console.log(`Access from network devices using your local IP address`);
 }
-bootstrap();
+
+// Only bootstrap if not in Vercel serverless environment
+if (!process.env.VERCEL) {
+  bootstrap();
+}
+

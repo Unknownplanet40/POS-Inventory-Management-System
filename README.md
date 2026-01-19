@@ -6,16 +6,30 @@ First and foremost, If you haven't already, please follow the full setup instruc
 ```bash
 cd server
 npm run start:dev
-# Backend ready at http://localhost:3000
+# Backend ready at http://localhost:3000 (accessible on network)
 ```
 
 ### Terminal 2 - Frontend
 ```bash
 npm run dev
-# Frontend ready at http://localhost:5173
+# Frontend ready at http://localhost:8080 (accessible on network)
 ```
 
-**That's it!** Open `http://localhost:5173` and follow the setup wizard.
+**That's it!** Open `http://localhost:8080` and follow the setup wizard.
+
+---
+
+## 📱 Access from Other Devices (Phone, Tablet, etc.)
+
+Want to use the POS system on your phone or another computer on the same network?
+
+### Quick Method:
+1. Run `get-ip.bat` (Windows) or `./get-ip.sh` (Mac/Linux) to find your IP
+2. Start both backend and frontend servers
+3. On your other device, open: `http://[YOUR-IP]:8080`
+
+### Detailed Instructions:
+See [NETWORK_ACCESS_GUIDE.md](NETWORK_ACCESS_GUIDE.md) for complete setup instructions.
 
 ---
 

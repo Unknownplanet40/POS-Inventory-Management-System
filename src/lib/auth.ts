@@ -1,4 +1,5 @@
 import { authAPI, setAuthToken as setAPIToken, clearAuthToken } from './api';
+import { BACKEND_BASE_URL } from '@/config/api.config';
 
 const SESSION_KEY = 'pos-session';
 
@@ -73,7 +74,7 @@ export async function logout(): Promise<void> {
     if (token) {
       const sessionData = JSON.parse(token);
       if (sessionData.token) {
-        await fetch('http://localhost:3000/api/auth/logout', {
+        await fetch(`${BACKEND_BASE_URL}/api/auth/logout`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${sessionData.token}`,

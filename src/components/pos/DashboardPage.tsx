@@ -7,6 +7,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, BarC
 import { getAllSales, getAllProducts, getAllUsers, getSettings } from '@/lib/db';
 import { BarChart3, Package, Users, TrendingUp, DollarSign, ShoppingCart, AlertTriangle, Sparkles, RefreshCw, Download } from 'lucide-react';
 import { resolveAssetUrl } from '@/lib/utils';
+import { getBackendUrl } from '@/config/api.config';
 
 export function DashboardPage() {
   const [stats, setStats] = useState({
@@ -468,7 +469,7 @@ export function DashboardPage() {
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       {product.imageUrl && product.imageUrl.trim() && !product.imageUrl.startsWith('data:') && (
                         <img
-                          src={product.imageUrl.startsWith('http') ? product.imageUrl : `http://localhost:3000${product.imageUrl}`}
+                          src={product.imageUrl.startsWith('http') ? product.imageUrl : getBackendUrl(product.imageUrl)}
                           alt={product.name}
                           className="w-10 h-10 object-cover rounded flex-shrink-0"
                           onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
@@ -520,7 +521,7 @@ export function DashboardPage() {
                       </div>
                       {item.product.imageUrl && item.product.imageUrl.trim() && !item.product.imageUrl.startsWith('data:') && (
                         <img
-                          src={item.product.imageUrl.startsWith('http') ? item.product.imageUrl : `http://localhost:3000${item.product.imageUrl}`}
+                          src={item.product.imageUrl.startsWith('http') ? item.product.imageUrl : getBackendUrl(item.product.imageUrl)}
                           alt={item.product.name}
                           className="w-10 h-10 object-cover rounded flex-shrink-0"
                           onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}

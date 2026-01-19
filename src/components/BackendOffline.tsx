@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, ServerOff } from 'lucide-react';
+import { BACKEND_BASE_URL } from '@/config/api.config';
 
 interface Props {
   onRetry?: () => void;
@@ -18,7 +19,7 @@ export function BackendOffline({ onRetry }: Props) {
         <div>
           <h2 className="text-xl font-semibold">Backend Unavailable</h2>
           <p className="text-sm text-muted-foreground mt-2">
-            We couldn't reach the server at <span className="font-mono">http://localhost:3000</span>. Make sure the backend
+            We couldn't reach the server at <span className="font-mono">{BACKEND_BASE_URL}</span>. Make sure the backend
             is running and your network allows access.
           </p>
         </div>

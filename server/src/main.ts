@@ -12,16 +12,18 @@ async function bootstrap() {
   app.use(require('express').json({ limit: '10mb' }));
   app.use(require('express').urlencoded({ limit: '10mb', extended: true }));
 
-  // Enable CORS for frontend
+  // Enable CORS for frontend - allow access from any origin on local network
   app.enableCors({
-    origin: ['http://localhost:5173', 'http://localhost:8080'],
+    origin: true, // Allow all origins (adjust for production)
     credentials: true,
   });
 
   // Use validation pipes
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
 
-  await app.listen(3000);
+  // Listen on all network interfaces (0.0.0.0) to accept connections from other devices
+  await app.listen(3000, '0.0.0.0');
   console.log(`Application is running on: http://localhost:3000`);
+  console.log(`Access from network devices using your local IP address`);
 }
 bootstrap();

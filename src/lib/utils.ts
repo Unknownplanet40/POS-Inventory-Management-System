@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { BACKEND_BASE_URL } from '@/config/api.config';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -7,16 +8,15 @@ export function cn(...inputs: ClassValue[]) {
 
 // Resolve asset URLs (like /product-image/...) to the backend host in dev
 // If the URL is already absolute (http, https, data:), return as-is.
-// Otherwise, prefix with the backend origin (default http://localhost:3000).
+// Otherwise, prefix with the backend origin.
 export function resolveAssetUrl(url?: string): string | undefined {
   if (!url) return url;
   const lower = url.toLowerCase();
   if (lower.startsWith('http://') || lower.startsWith('https://') || lower.startsWith('data:')) {
     return url;
   }
-  const backendOrigin = 'http://localhost:3000';
   if (url.startsWith('/')) {
-    return `${backendOrigin}${url}`;
+    return `${BACKEND_BASE_URL}${url}`;
   }
   return url;
 }

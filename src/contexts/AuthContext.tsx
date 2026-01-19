@@ -3,6 +3,7 @@ import { Session, getSession, login as authLogin, logout as authLogout } from '@
 import { getSettings, AppSettings } from '@/lib/db';
 import { clearAuthToken } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
+import { BACKEND_BASE_URL } from '@/config/api.config';
 
 interface AuthContextType {
   session: Session | null;
@@ -17,6 +18,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const SESSION_CHECK_INTERVAL = 30000; // Check every 30 seconds
+const BACKEND_HEALTH_CHECK_INTERVAL = 5000; // Check backend every 5 seconds when offline
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
@@ -24,6 +26,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isSetupComplete, setIsSetupComplete] = useState(false);
   const [backendDown, setBackendDown] = useState(false);
   const { toast } = useToast();
+
+  const checkBackendHealth = async () => {
+    try {
+      const response = await fetch(`${BACKEND_BASE_URL}/api/health`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      return response.ok;
+    } catch {
+      return false;
+    }
+  };
 
   const refreshSetupStatus = async () => {
     try {
@@ -52,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      const response = await fetch('http://localhost:3000/api/auth/validate-session', {
+      const response = await fetch(`${BACKEND_BASE_URL}/api/auth/validate-session`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -100,6 +114,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
     initAuth();
   }, []);
+
+  // Backend health monitoring when offline
+  useEffect(() => {
+    if (!backendDown) {
+      return;
+    }
+
+    console.log('[BACKEND] Backend is down, starting health checks...');
+    
+    const healthCheckInterval = setInterval(async () => {
+      console.log('[BACKEND] Checking backend health...');
+      const isHealthy = await checkBackendHealth();
+      
+      if (isHealthy) {
+        console.log('[BACKEND] Backend is back online!');
+        try {
+          await refreshSetupStatus();
+          toast({
+            title: 'Backend Online',
+            description: 'Successfully reconnected to the backend server.',
+            variant: 'default',
+          });
+        } catch {
+          // Backend might still be initializing
+        }
+      }
+    }, BACKEND_HEALTH_CHECK_INTERVAL);
+
+    return () => clearInterval(healthCheckInterval);
+  }, [backendDown, toast]);
 
   // Session monitoring
   useEffect(() => {

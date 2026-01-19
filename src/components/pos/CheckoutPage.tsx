@@ -14,6 +14,7 @@ import { generateId } from '@/lib/auth';
 import { BarcodeScanner } from './BarcodeScanner';
 import { ReceiptDialog } from './ReceiptDialog';
 import { Camera, Search, Plus, Minus, Trash2, Percent, DollarSign, ShoppingBag, AlertTriangle, Check, RefreshCw } from 'lucide-react';
+import { getBackendUrl } from '@/config/api.config';
 
 interface CartItem {
   product: Product;
@@ -344,7 +345,7 @@ export function CheckoutPage({ onCartChange }: CheckoutPageProps) {
                         {/* Image on left side */}
                         {product.imageUrl && product.imageUrl.trim() && !product.imageUrl.startsWith('data:') && (
                           <img
-                            src={product.imageUrl.startsWith('http') ? product.imageUrl : `http://localhost:3000${product.imageUrl}`}
+                            src={product.imageUrl.startsWith('http') ? product.imageUrl : getBackendUrl(product.imageUrl)}
                             alt={product.name}
                             className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-xl flex-shrink-0"
                             onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
@@ -375,7 +376,7 @@ export function CheckoutPage({ onCartChange }: CheckoutPageProps) {
                         </div>
                         {product.imageUrl && product.imageUrl.trim() && !product.imageUrl.startsWith('data:') && (
                           <img
-                            src={product.imageUrl.startsWith('http') ? product.imageUrl : `http://localhost:3000${product.imageUrl}`}
+                            src={product.imageUrl.startsWith('http') ? product.imageUrl : getBackendUrl(product.imageUrl)}
                             alt={product.name}
                             className="w-full h-32 object-contain rounded-lg"
                             onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
@@ -428,7 +429,7 @@ export function CheckoutPage({ onCartChange }: CheckoutPageProps) {
                   {/* Image on left side */}
                   {product.imageUrl && product.imageUrl.trim() && !product.imageUrl.startsWith('data:') && (
                     <img
-                      src={product.imageUrl.startsWith('http') ? product.imageUrl : `http://localhost:3000${product.imageUrl}`}
+                      src={product.imageUrl.startsWith('http') ? product.imageUrl : getBackendUrl(product.imageUrl)}
                       alt={product.name}
                       className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-xl flex-shrink-0"
                       onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
@@ -473,7 +474,7 @@ export function CheckoutPage({ onCartChange }: CheckoutPageProps) {
                       <div className="flex-shrink-0">
                         {item.product.imageUrl && item.product.imageUrl.trim() && !item.product.imageUrl.startsWith('data:') && (
                           <img
-                            src={item.product.imageUrl.startsWith('http') ? item.product.imageUrl : `http://localhost:3000${item.product.imageUrl}`}
+                            src={item.product.imageUrl.startsWith('http') ? item.product.imageUrl : getBackendUrl(item.product.imageUrl)}
                             alt={item.product.name}
                             className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-xl"
                             onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}

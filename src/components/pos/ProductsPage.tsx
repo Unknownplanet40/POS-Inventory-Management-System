@@ -11,6 +11,7 @@ import { getAllProducts, createProduct, updateProduct, deleteProduct, restorePro
 import { generateId } from '@/lib/auth';
 import { BarcodeScanner } from './BarcodeScanner';
 import { Plus, Edit, Trash2, Package, Search, Barcode, Camera, Archive, RotateCcw, Tag, X, Upload } from 'lucide-react';
+import { getBackendUrl } from '@/config/api.config';
 
 export function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -138,8 +139,8 @@ export function ProductsPage() {
       // Set proper preview URL for existing images
       if (product.imageUrl && !product.imageUrl.startsWith('data:')) {
         const previewUrl = product.imageUrl.startsWith('http') 
-          ? product.imageUrl 
-          : `http://localhost:3000${product.imageUrl}`;
+          ? product.imageUrl
+          : getBackendUrl(product.imageUrl);
         setImagePreview(previewUrl);
       } else {
         setImagePreview('');
@@ -641,7 +642,7 @@ export function ProductsPage() {
                 <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-xl bg-muted overflow-hidden flex items-center justify-center flex-shrink-0">
                   {product.imageUrl && product.imageUrl.trim() && !product.imageUrl.startsWith('data:') ? (
                     <img
-                      src={product.imageUrl.startsWith('http') ? product.imageUrl : `http://localhost:3000${product.imageUrl}`}
+                      src={product.imageUrl.startsWith('http') ? product.imageUrl : getBackendUrl(product.imageUrl)}
                       alt={product.name}
                       className="h-full w-full object-cover"
                       onError={(e) => {

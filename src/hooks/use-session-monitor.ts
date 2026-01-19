@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from './use-toast';
+import { BACKEND_BASE_URL } from '@/config/api.config';
 
 const SESSION_CHECK_INTERVAL = 30000; // Check every 30 seconds
 
@@ -16,7 +17,7 @@ export function useSessionMonitor() {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/api/auth/validate-session', {
+      const response = await fetch(`${BACKEND_BASE_URL}/api/auth/validate-session`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

@@ -1,9 +1,9 @@
 /**
  * API Service for communicating with NestJS backend
- * Base URL: http://localhost:3000
  */
 
-const API_BASE_URL = 'http://localhost:3000/api';
+import { API_BASE_URL } from '@/config/api.config';
+
 let authToken: string | null = null;
 
 export function setAuthToken(token: string) {
@@ -44,9 +44,10 @@ async function apiCall(
   try {
     response = await fetch(`${API_BASE_URL}${endpoint}`, options);
   } catch (err: any) {
-    const message = err?.message || 'Unable to reach server';
+    const message = err?.message || 'Unable to reach backend server. Please check if the server is running.';
     const error = new Error(message) as Error & { code?: string };
     error.code = 'BACKEND_UNREACHABLE';
+    console.error('[API] Backend unreachable:', message);
     throw error;
   }
 

@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
 import { registerUser } from '@/lib/auth';
 import { saveSettings } from '@/lib/db';
 import { useAuth } from '@/contexts/AuthContext';
-import { Store, User, Lock, Check, Eye, EyeOff, Info } from 'lucide-react';
+import { Store, User, Lock, Check, Eye, EyeOff, Info, WifiOff, Wifi } from 'lucide-react';
+import { BACKEND_BASE_URL } from '@/config/api.config';
 
 export function SetupWizard() {
   const [step, setStep] = useState(1);
@@ -20,8 +22,32 @@ export function SetupWizard() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const [backendStatus, setBackendStatus] = useState<'online' | 'offline' | 'checking'>('checking');
   const { toast } = useToast();
   const { refreshSetupStatus, login } = useAuth();
+
+  // Check backend connectivity during setup
+  useEffect(() => {
+    const checkBackend = async () => {
+      try {
+        const response = await fetch(`${BACKEND_BASE_URL}/api/health`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        setBackendStatus(response.ok ? 'online' : 'offline');
+      } catch {
+        setBackendStatus('offline');
+      }
+    };
+
+    // Initial check
+    checkBackend();
+
+    // Check every 5 seconds during setup
+    const interval = setInterval(checkBackend, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleStoreSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,6 +128,26 @@ export function SetupWizard() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {/* Backend Status Indicator */}
+          {!isComplete && (
+            <Alert className={`mb-4 ${backendStatus === 'offline' ? 'border-destructive/50 text-destructive' : backendStatus === 'online' ? 'border-green-500/50 text-green-700 dark:text-green-400' : ''}`}>
+              <div className="flex items-center gap-2">
+                {backendStatus === 'offline' ? (
+                  <WifiOff className="h-4 w-4" />
+                ) : backendStatus === 'online' ? (
+                  <Wifi className="h-4 w-4" />
+                ) : (
+                  <div className="h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                )}
+                <AlertDescription className="text-sm font-medium">
+                  {backendStatus === 'offline' && 'Backend Offline - Setup cannot proceed'}
+                  {backendStatus === 'online' && 'Backend Connected'}
+                  {backendStatus === 'checking' && 'Checking backend connection...'}
+                </AlertDescription>
+              </div>
+            </Alert>
+          )}
+
           {!isComplete && (
             <>
               {/* Progress indicator */}
@@ -126,9 +172,14 @@ export function SetupWizard() {
                       placeholder="e.g., PC Parts & Accessories"
                       className="h-14 text-lg"
                       autoFocus
+                      disabled={backendStatus === 'offline'}
                     />
                   </div>
-                  <Button type="submit" className="w-full h-14 text-lg">
+                  <Button 
+                    type="submit" 
+                    className="w-full h-14 text-lg"
+                    disabled={backendStatus === 'offline'}
+                  >
                     Continue
                   </Button>
                 </form>
@@ -206,7 +257,11 @@ export function SetupWizard() {
                     <Button type="button" variant="outline" onClick={() => setStep(1)} className="flex-1 h-14 text-lg">
                       Back
                     </Button>
-                    <Button type="submit" disabled={isSubmitting} className="flex-1 h-14 text-lg">
+                    <Button 
+                      type="submit" 
+                      disabled={isSubmitting || backendStatus === 'offline'} 
+                      className="flex-1 h-14 text-lg"
+                    >
                       {isSubmitting ? 'Creating...' : 'Complete Setup'}
                     </Button>
                   </div>
